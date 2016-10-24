@@ -112,15 +112,9 @@ if realVersion
                 group = 'a';
             elseif group == 'y' || group == 'Y'
                 p_group = 2;
-                groupFileEnd = '_C';
-            elseif group == 'n' || group == 'N'
-                p_group = 1;
-                groupFileEnd = '_P';
-            end
-        end
                 
         
-        datafilename = [datafoldername, '\', exptName, '_dataP', num2str(p_number), groupFileEnd, '.mat'];
+        datafilename = [datafoldername, '\', exptName, '_dataP', num2str(p_number), '.mat'];
         
         if exist(datafilename, 'file') == 2
             disp(['Data for participant ', num2str(p_number),' already exist'])
@@ -156,7 +150,6 @@ else
 end
 
 DATA.subject = p_number;
-DATA.group = p_group;
 DATA.cueBal = cueBalance;
 DATA.age = p_age;
 DATA.sex = p_sex;
