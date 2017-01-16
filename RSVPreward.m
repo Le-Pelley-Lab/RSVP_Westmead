@@ -13,8 +13,8 @@ global realVersion
 global laptopVersion viewDistance monitorDims
 
 
-realVersion = false;
-laptopVersion = false; %set to true if running on laptop at Westmead
+realVersion = true;
+laptopVersion = true; %set to true if running on laptop at Westmead
 
 
 exptName = 'RSVP_Westmead';
@@ -50,24 +50,29 @@ if realVersion          % Parameters for running the real experiment
 else           % Parameters for development / debugging
     %    Screen('Preference', 'SkipSyncTests', 2);      % Skips the Psychtoolbox calibrations
     Screen('Preference', 'SkipSyncTests', 1);
-    screenNum = 1;
+    screens = Screen('Screens');
+    screenNum = max(screens);
     soundLatency = 0;
     instrPause = 12;
     
 end
 
 if laptopVersion
-    DPI = 96; % will probably need to change
     viewDistance = 60;
+    screenDiagonal = 39.624; %15.6 inches = 39.624 cm
+    screenRatio = [16 9]; %16:9 screen ratio
+    screenHeight = screenDiagonal*screenRatio(2)/sqrt(16^2 + 9^2);
+    screenWidth = (16/9)*screenHeight;
 else
-    DPI = 96;
     viewDistance = 60;
+    screenDiagonal = 58.42; %23 inches = 58.42 cm
+    screenRatio = [16 9]; %16:9 screen ratio
+    screenHeight = screenDiagonal*screenRatio(2)/sqrt(16^2 + 9^2);
+    screenWidth = (16/9)*screenHeight;
 end
 
-set(0, 'ScreenPixelsPerInch', DPI);
-set(0, 'units', 'centimeters');
-monitorDims = get(0, 'screensize');
-monitorDims = monitorDims(3:4);   
+
+monitorDims = [screenWidth screenHeight]; 
 
 
 soundPAhandle = PsychPortAudio('Open', [], 1, soundLatency, sndFreq);
@@ -107,7 +112,7 @@ if realVersion
         
         group = 'a';
         while group ~= 'y' && group ~= 'Y' && group ~= 'n' && group ~= 'N'
-            group = input('Is this a control participant (Y/N) ---> ', 's')
+            group = input('Is this a control participant (Y/N) ---> ', 's');
             if isempty(group)
                 group = 'a';
             elseif group == 'y' || group == 'Y'
@@ -151,6 +156,7 @@ else
     orderBalance = 2;
     p_sex = 'm';
     p_age = 123;
+    p_group = 3;
     datafilename = [datafoldername, '\', exptName, '_dataP', num2str(p_number), '.mat'];
 
 end
